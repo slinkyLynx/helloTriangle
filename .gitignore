@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Build folders
+**/build/
+
+# Geany IDE
+*.geany
