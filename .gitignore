@@ -33,6 +33,3 @@
 
 # Build folders
 **/build/
-
-# Geany IDE
-*.geany
