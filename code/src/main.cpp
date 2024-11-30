@@ -63,7 +63,7 @@ private:
     const char **glfwExtensions =
         glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-    if (checkExtensions(glfwExtensionCount, glfwExtensions)) {
+    if (!checkExtensions(glfwExtensionCount, glfwExtensions)) {
       std::string error{__PRETTY_FUNCTION__};
       error += " Vulkan extensions not found";
       throw std::runtime_error(error);
