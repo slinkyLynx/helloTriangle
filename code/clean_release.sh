@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd build
+cd build_release
 make clean
 cd ..

@@ -32,4 +32,5 @@
 *.app
 
 # Build folders
-**/build/
+**/build_debug/
+**/build_release/
