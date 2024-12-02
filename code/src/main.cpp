@@ -46,7 +46,42 @@ private:
     return foundExtensions == glfwExtensionCount;
   }
 
+  bool checkValidationLayerSupport() {
+    uint32_t layerCount;
+    vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+    std::vector<VkLayerProperties> availableLayers(layerCount);
+    vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+    for (auto layerName : mValidationLayers) {
+      bool layerFound{false};
+
+      for (const auto &layerProperties : availableLayers) {
+        if (layerName == layerProperties.layerName) {
+          layerFound = true;
+          break;
+        }
+      }
+
+      if (!layerFound) {
+        // If one of the validation layers is missing, something is wrong, and
+        // there is no point in checking for the remaining layers.
+        return false;
+      }
+    }
+
+    return true; // All validation layers have been found.
+  }
+
   void createInstance() {
+#ifndef NDEBUG
+    std::cout << "Debug mode enabled\n";
+#endif
+    if (mEnableValidationLayers && !checkValidationLayerSupport()) {
+      throw std::runtime_error(
+          "Validation layers are requested but unavailable");
+    }
+
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = "Hello triangle";
@@ -96,6 +131,13 @@ private:
 
   const uint16_t mWidth{800u};
   const uint16_t mHeight{600u};
+  const std::vector<const char *> mValidationLayers{
+      "VK_LAYER_KHRONOS_validation"};
+#ifdef NDEBUG
+  const bool mEnableValidationLayers{false};
+#else
+  const bool mEnableValidationLayers{true};
+#endif
   GLFWwindow *mWindow; // Change this to std::unique_ptr<GLFWWindow> later
   VkInstance mInstance;
 };
