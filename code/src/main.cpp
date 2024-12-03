@@ -65,13 +65,13 @@ private:
       }
 
       if (!layerFound) {
-        // If one of the validation layers is missing, something is wrong, and
-        // there is no point in checking for the remaining layers.
+        // If one of the requested validation layers is missing, something is
+        // wrong, and there is no point in checking for the remaining layers.
         return false;
       }
     }
 
-    return true; // All validation layers have been found.
+    return true; // All requested validation layers have been found.
   }
 
   void createInstance() {
