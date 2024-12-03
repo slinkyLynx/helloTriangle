@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <cstdint>
+#include <cstring>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -57,7 +58,7 @@ private:
       bool layerFound{false};
 
       for (const auto &layerProperties : availableLayers) {
-        if (layerName == layerProperties.layerName) {
+        if (strcmp(layerName, layerProperties.layerName) == 0) {
           layerFound = true;
           break;
         }
@@ -78,8 +79,9 @@ private:
     std::cout << "Debug mode enabled\n";
 #endif
     if (mEnableValidationLayers && !checkValidationLayerSupport()) {
-      throw std::runtime_error(
-          "Validation layers are requested but unavailable");
+      std::string error{__PRETTY_FUNCTION__};
+      error += " Validation layers are requested but unavailable";
+      throw std::runtime_error(error);
     }
 
     VkApplicationInfo appInfo{};
@@ -93,6 +95,13 @@ private:
     VkInstanceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
+    if (mEnableValidationLayers) {
+      createInfo.enabledLayerCount =
+          static_cast<uint32_t>(mValidationLayers.size());
+      createInfo.ppEnabledLayerNames = mValidationLayers.data();
+    } else {
+      createInfo.enabledLayerCount = 0u;
+    }
 
     uint32_t glfwExtensionCount{0u};
     const char **glfwExtensions =
