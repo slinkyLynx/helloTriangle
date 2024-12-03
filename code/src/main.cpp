@@ -65,13 +65,27 @@ private:
       }
 
       if (!layerFound) {
-        // If one of the requested validation layers is missing, something is
+                // If one of the required validation layers is missing, something is
         // wrong, and there is no point in checking for the remaining layers.
         return false;
       }
     }
 
-    return true; // All requested validation layers have been found.
+        return true; // All required validation layers have been found.
+    }
+
+    std::vector<const char*> getRequiredExtensions() {
+        uint32_t glfwExtensionCount{0u};
+        const char** glfwExtensions =
+            glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+        std::vector<const char*> extensions(glfwExtensions,
+                                            glfwExtensions + glfwExtensionCount);
+
+        if (mEnableValidationLayers) {
+            extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+        }
+
+        return extensions;
   }
 
   void createInstance() {
