@@ -94,7 +94,7 @@ private:
 #endif
         if (mEnableValidationLayers && !checkValidationLayerSupport()) {
             std::string error{__PRETTY_FUNCTION__};
-            error += " Validation layers are requested but unavailable";
+            error += " Validation layers are requested but not found";
             throw std::runtime_error(error);
         }
 
